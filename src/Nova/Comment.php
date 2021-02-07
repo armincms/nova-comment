@@ -16,7 +16,7 @@ class Comment extends Resource
      *
      * @var string
      */
-    public static $model = \Laravelista\Comments\Comment::class; 
+    public static $model = \Armincms\NovaComment\Models\Comment::class; 
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -109,8 +109,8 @@ class Comment extends Resource
                 }),
 
            Text::make(__('User'), function() {
-                    return implode(':', array_filter([$this->guest_name, $this->guest_email])) ?: null; 
-                }) 
+                return implode(':', array_filter([$this->guest_name, $this->guest_email])) ?: null; 
+            }) 
                 ->hideFromIndex(! $this->isGuest($request))
                 ->hideFromDetail(! $this->isGuest($request)),
 
@@ -135,7 +135,7 @@ class Comment extends Resource
             return $request->newViaResource()->authorizedToAdd($request, static::newModel());
         }   
 
-        return $request->isMethod('get') && parent::authorizedToCreate($request);
+        return ! $request->isMethod('get') && parent::authorizedToCreate($request);
     }
 
     /**
